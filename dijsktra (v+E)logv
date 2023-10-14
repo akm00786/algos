@@ -1,0 +1,184 @@
+
+
+
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <climits>
+using namespace std ;
+
+class minheap
+{                            // first = weight
+    vector<pair<int,int>> v ;  // second = vertex
+    int size ;
+
+    public :
+    minheap( )
+    {
+      size = 0 ;
+    }
+    void uphipify ( int i )
+    {
+        if ( i == 0 )
+        {
+          return ;
+        }
+            int parent = ( i-1 ) / 2 ;
+
+            if ( v[parent].first > v[i].first )
+            {
+              swap ( v[parent] , v[i] ) ;
+              uphipify ( parent ) ;
+
+            }
+    }
+    void downhipify ( int i )
+    { 
+        if (  ( 2*i + 1 ) >= size )
+        {
+          return ; 
+        }
+        int left = 2*i + 1 ;
+        int right = 2*i + 2 ;
+
+        int mini = i ;
+
+        if ( v[left].first < v[mini].first )
+        {
+          mini = left ;
+        }
+         if ( right < size && v[right].first < v[mini].first )
+        {
+          mini = right ;
+        }
+
+
+        if ( mini != i )
+        {
+            swap  ( v[i] , v[mini] ) ;
+            downhipify ( mini ) ;
+        }
+  
+
+      //......
+
+
+
+    }
+    void push ( pair<int,int> a  )
+    {
+         v.push_back( a ) ;
+
+         size++ ;
+
+         uphipify( v.size() - 1 ) ;
+
+    }
+    void pop ( )
+    {
+        v[0] = v[v.size()-1];
+        v.pop_back() ;
+      
+        size--;
+
+        downhipify ( 0 );
+
+    }
+  
+  pair<int,int> top ()
+  {
+      return v[0];
+  }
+  void decrease (int vertex , int w)
+  {
+      for ( int i=0; i < v.size(); i++)
+      {
+          if (v[i].second==vertex)
+          {
+            v[i].first=w;
+            uphipify(i);
+            break;
+          }
+      }
+  }
+
+};
+
+
+void dijsktra ( vector< pair<int,int> > * graph , int n )
+{
+     
+
+     minheap q ;
+
+   vector<bool> visit (n,false);
+   vector<int> key (n,INT_MAX);  key[0]=0;
+  
+     for ( int i = 1 ; i < n ; i++ )
+     {
+        q.push ( make_pair( INT_MAX , i ) )  ;
+     }
+     q.push ( make_pair(0,0) ) ;
+
+     for ( int i=0; i < n-1 ;  i++ )
+     {
+            int w1 = q.top().first;
+            int v1 = q.top().second;
+            q.pop() ;
+
+            visit[v1] = true;
+
+            for ( int i=0; i < graph[v1].size() ;  i++ )
+            {
+                int v2 = graph[v1][i].first ;
+                int w2 = graph[v1][i].second ;
+
+                if ( !visit[v2] )
+                {
+                        if ( (  w1+w2 ) < key[v2]  )
+                        {
+                          key[v2] = w1 + w2 ;
+                          q.decrease( v2 , w1+w2  ) ;
+                        }
+                       
+                }
+            }
+
+     }
+
+
+
+ for ( int i=0; i<n; i++)
+ {
+  cout << i << " " << key[i] << endl;
+ }
+  
+
+}
+
+
+int main  (  )
+{
+    
+    
+    int n  ,  e   ;
+    cin >>  n  >>  e  ;
+
+
+  vector<pair<int,int>> * graph = new vector<pair<int,int>> [n] ; 
+
+  for ( int i = 0 ;  i < e  ; i++ )
+  {
+   
+    int u , v , w ;
+    cin >>  u  >>  v  >>  w ;
+
+    graph[u].push_back( make_pair( v , w ) ) ;
+    graph[v].push_back( make_pair( u , w ) ) ;
+
+  }
+  dijsktra ( graph , n ) ;
+ 
+     
+
+}
