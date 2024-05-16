@@ -1,0 +1,42 @@
+
+
+
+ vector <int> dijkstra(int v, vector< pair<int,int> > adj[], int src)
+    {
+      
+        
+        set<pair<int,int>> set ;
+        
+         vector<int> dis ( v , 1e9 ) ;
+         dis[src] = 0 ;
+        
+        set.insert({0 , src} ) ;
+        
+        while ( !set.empty() )
+        {
+            
+            auto x = *( set.begin() ) ;
+            
+            int u = x.second ;
+            int distance = x.first ;
+            
+            set.erase(x) ;
+            
+            for ( auto b : adj[u] )
+            {
+                
+                int weight = b.second;
+                int v = b.first ;
+                if ( distance +weight < dis[v] )
+                {
+                    if ( dis[v] != 1e9 )
+                    {
+                        set.erase({dis[v] , v} );
+                    }                    
+                    dis[v] = distance+weight;
+                    set.insert ( { dis[v]  , v } ) ;       
+                }
+            }   
+        }
+        return dis;
+    }
