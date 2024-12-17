@@ -1,0 +1,62 @@
+// Online C++ compiler to run C++ program online
+#include <bits/stdc++.h>
+using namespace std;
+
+class Dsu {
+    
+    public :
+    
+    vector<int> size ;
+    vector<int> parent ;
+    
+    Dsu ( int n  ) {
+        size.resize ( n , 1 ) ;
+        parent.resize ( n  ) ;
+        for ( int i=0;  i < n;  i++ ) {
+            parent[i] = i ;
+        }
+    }
+    
+    int findParent ( int u ) {
+        if ( parent[u] == u ) {
+            return u ;
+        }
+        return parent[u] = findParent( parent[u] ) ;
+    }
+    
+    
+    void UnionBySize ( int u , int v ) {
+        
+        int ult_u = findParent(u) ;
+        int ult_v = findParent(v) ;
+        
+        if ( size[ ult_u ] >= size[ ult_v ] ) {
+            
+            parent[ ult_v ] = ult_u ;
+            size[ ult_u ] += size[ ult_v ] ; 
+            
+        }
+        else{
+             parent[ ult_u ] = ult_v ;
+            size[ ult_v ] += size[ ult_u ] ; 
+        }
+        
+    }
+  
+    
+};
+
+int main() {
+    int n = 5 ;
+    Dsu dsu( n ) ;
+    
+    dsu.UnionBySize ( 1,3 ) ;
+    dsu.UnionBySize ( 2,3 ) ;
+    if( dsu.findParent(1) == dsu.findParent(2) ) {
+        cout << "same" ;
+    }
+    else{
+        cout << "not Same" ;
+    }
+   
+}
