@@ -29,6 +29,10 @@ class Dsu {
         
         int ult_u = findParent(u) ;
         int ult_v = findParent(v) ;
+
+       if ( ult_u == ult_v ){ 
+           return;
+       }
         
         if ( size[ ult_u ] >= size[ ult_v ] ) {
             
@@ -42,7 +46,7 @@ class Dsu {
         }
         
     }
-  
+ 
     
 };
 
